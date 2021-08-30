@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QFileDialog, QMessageBox, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QScrollArea, QFileDialog, QMessageBox, QHBoxLayout, QVBoxLayout
 from PyQt5.QtCore import QPoint, QThread, pyqtSignal, Qt, QRect
 from PyQt5.QtGui import QPixmap, QPainter, QPen
 from PIL import Image
@@ -14,6 +14,7 @@ class PicEditWindow(QWidget):
         self._back_btn = None
         self._clear_btn = None
         self._pic_label = None
+        self._scroll_area = None
 
         # 入口
         self._main()
@@ -28,6 +29,7 @@ class PicEditWindow(QWidget):
         self._back_btn = QPushButton('后退')
         self._clear_btn = QPushButton('清空')
         self._pic_label = PicLabel()
+        self.scroll_area = QScrollArea()
 
     def _init_signals(self):
         self._save_btn.clicked.connect(self._save_slot)
@@ -40,7 +42,7 @@ class PicEditWindow(QWidget):
         h_layout.addWidget(self._clear_btn)
         h_layout.addWidget(self._back_btn)
         h_layout.addWidget(self._save_btn)
-        v_layout.addWidget(self._pic_label)
+        v_layout.addWidget(self.scroll_area)
         v_layout.addLayout(h_layout)
         self.setLayout(v_layout)
 
@@ -66,6 +68,7 @@ class PicEditWindow(QWidget):
             return
 
         self._pic_label.set_pic(path)
+        self.scroll_area.setWidget(self._pic_label)
 
 
 class PicLabel(QLabel):
@@ -181,5 +184,3 @@ if __name__ == '__main__':
     window = PicEditWindow()
     window.show()
     sys.exit(app.exec_())
-
-
